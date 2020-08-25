@@ -16,9 +16,14 @@
 </style>
 <body>
   <h1>PianoUI Examples</h1>
+  <li>
+    <ul><a href="#fixed">Fixed Size</a></ul>
+    <ul><a href="#responsive">Responsive Size</a></ul>
+    <ul><a href="#event">Event Handling</a></ul>
+  </li>
   <hr style="margin-top: 40px;">
 
-  <h2>Fixed Size:</h2>
+  <h2 id="fixed">Fixed Size:</h2>
   <div id="fixed-size"></div>
 
   <pre class="code-badge-pre">
@@ -36,7 +41,8 @@
 
   <hr style="margin-top: 60px;">
 
-  <h2>Responsive Size:</h2>
+  <h2 id="responsive">Responsive Size:</h2>
+  <p>The piano can be set to always fill its parent container. Sizing can then be controlled externally with css or javascript. Resize the browser window to see the effect.</p>
   <div id="responsive-size"></div>
 
   <pre class="code-badge-pre">
@@ -60,7 +66,8 @@
 
   <hr style="margin-top: 60px;">
 
-  <h2>Event Handling:</h2>
+  <h2 id="event">Event Handling:</h2>
+  <p>A minimal example interfacing with Tone.js. The piano below can be played with your mouse. </p>
   <div id="event-handling"></div>
 
   <pre class="code-badge-pre">
@@ -69,9 +76,25 @@
     &lt;<span class="hljs-dom">div </span><span class="hljs-attr">id</span>=<span class="hljs-string">"event-handling"</span>&gt;&lt;/<span class="hljs-dom">div</span>&gt;
 
     &lt;<span class="hljs-dom">script</span>&gt;
-      <span class="hljs-dom">let </span><span class="hljs-attr">fixedSize</span> = <span class="hljs-dom">new </span><span class="hljs-type">PianoUI.Piano</span>(<span class="hljs-string">"#event-handling"</span>, {
+
+      <span class="hljs-dom">let </span><span class="hljs-attr">eventHandler</span> = <span class="hljs-dom">new </span><span class="hljs-type">PianoUI.Piano</span>(<span class="hljs-string">"#event-handling"</span>, {
         <span class="hljs-attr">size: </span>[<span class="hljs-string">"800px"</span>, <span class="hljs-string">"200px"</span>]
       });
+
+      <span class="hljs-dom">let </span><span class="hljs-attr">synth</span> = <span class="hljs-dom">new </span><span class="hljs-type">Tone.Synth</span>()<span class="hljs-class">.toMaster</span>();
+      <span class="hljs-dom">let </span><span class="hljs-attr">notes</span> = [<span class="hljs-string">"C"</span>, <span class="hljs-string">"C#"</span>, <span class="hljs-string">"D"</span>, <span class="hljs-string">"D#"</span>, <span class="hljs-string">"E"</span>, <span class="hljs-string">"F"</span>, <span class="hljs-string">"F#"</span>, <span class="hljs-string">"G"</span>, <span class="hljs-string">"G#"</span>, <span class="hljs-string">"A"</span>, <span class="hljs-string">"A#"</span>, <span class="hljs-string">"B"</span>];
+
+      <span class="hljs-attr">eventHandler</span><span class="hljs-class">.on</span>(<span class="hljs-string">"noteOn"</span>, (<span class="hljs-attr">event</span>)<span class="hljs-dom"> => </span>{
+        <span class="hljs-dom">let </span><span class="hljs-attr">letter</span> = <span class="hljs-attr">notes</span>[<span class="hljs-attr">event</span>.<span class="hljs-attr">note</span> % <span class="hljs-class">12</span>];
+        <span class="hljs-dom">let </span><span class="hljs-attr">octave</span> = <span class="hljs-type">Math</span>.<span class="hljs-class">floor</span>(<span class="hljs-attr">event</span>.<span class="hljs-attr">note</span> / <span class="hljs-class">12</span>);
+        <span class="hljs-dom">let </span><span class="hljs-attr">note</span> = <span class="hljs-attr">letter</span> + <span class="hljs-attr">octave</span>;
+        <span class="hljs-attr">synth</span>.<span class="hljs-class">triggerAttack</span>(<span class="hljs-attr">note</span>);
+      });
+
+      <span class="hljs-attr">eventHandler</span><span class="hljs-class">.on</span>(<span class="hljs-string">"noteOff"</span>, ()<span class="hljs-dom"> => </span>{
+        <span class="hljs-attr">synth</span>.<span class="hljs-class">triggerRelease</span>();
+      });
+
     &lt;/<span class="hljs-dom">script</span>&gt;
   &lt;/<span class="hljs-dom">body</span>&gt;
   </code></pre>
@@ -98,12 +121,13 @@
     let notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
     eventHandler.on('noteOn', (event) => {
-      let note = notes[event.note % 12];
-      note += Math.floor(event.note / 12);
+      let letter = notes[event.note % 12];
+      let octave = Math.floor(event.note / 12);
+      let note = letter + octave;
       synth.triggerAttack(note);
     });
 
-    eventHandler.on('noteOff', (event) => {
+    eventHandler.on('noteOff', () => {
       synth.triggerRelease();
     });
   </script>
