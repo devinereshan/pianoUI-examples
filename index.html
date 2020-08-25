@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>PianoUI Examples</title>
+  <script src="./Tone.js"></script>
+  <script src="./PianoUI.min.js"></script>
+</head>
+<style>
+  #responsive-size {
+    width: 80vw;
+    height: 20vh;
+  }
+</style>
+<body>
+  <h1>PianoUI Examples</h1>
+  <hr style="margin-top: 40px;">
+
+  <h2>Fixed Size:</h2>
+  <div id="fixed-size"></div>
+
+  <pre class="code-badge-pre">
+  <code class="hljs">
+  &lt;<span class="hljs-dom">body</span>&gt;
+    &lt;<span class="hljs-dom">div </span><span class="hljs-attr">id</span>=<span class="hljs-string">"fixed-size"</span>&gt;&lt;/<span class="hljs-dom">div</span>&gt;
+
+    &lt;<span class="hljs-dom">script</span>&gt;
+      <span class="hljs-dom">let </span><span class="hljs-attr">fixedSize</span> = <span class="hljs-dom">new </span><span class="hljs-type">PianoUI.Piano</span>(<span class="hljs-string">"#fixed-size"</span>, {
+        <span class="hljs-attr">size: </span>[<span class="hljs-string">"800px"</span>, <span class="hljs-string">"200px"</span>]
+      });
+    &lt;/<span class="hljs-dom">script</span>&gt;
+  &lt;/<span class="hljs-dom">body</span>&gt;
+  </code></pre>
+
+  <hr style="margin-top: 60px;">
+
+  <h2>Responsive Size:</h2>
+  <div id="responsive-size"></div>
+
+  <pre class="code-badge-pre">
+  <code class="hljs">
+  &lt;<span class="hljs-dom">style</span>&gt;
+    <span class="hljs-class">#responsive-size</span> {
+      <span class="hljs-attr">width: </span>80vw;
+      <span class="hljs-attr">height: </span> 20vh;
+    }
+  &lt;<span class="hljs-dom">style</span>&gt;
+  &lt;<span class="hljs-dom">body</span>&gt;
+    &lt;<span class="hljs-dom">div </span><span class="hljs-attr">id</span>=<span class="hljs-string">"responsive-size"</span>&gt;&lt;/<span class="hljs-dom">div</span>&gt;
+
+    &lt;<span class="hljs-dom">script</span>&gt;
+      <span class="hljs-dom">let </span><span class="hljs-attr">responsiveSize</span> = <span class="hljs-dom">new </span><span class="hljs-type">PianoUI.Piano</span>(<span class="hljs-string">"#responsive-size"</span>, {
+        <span class="hljs-attr">size: </span>[<span class="hljs-string">"100%"</span>, <span class="hljs-string">"100%"</span>]
+      });
+    &lt;/<span class="hljs-dom">script</span>&gt;
+  &lt;/<span class="hljs-dom">body</span>&gt;
+  </code></pre>
+
+  <hr style="margin-top: 60px;">
+
+  <h2>Event Handling:</h2>
+  <div id="event-handling"></div>
+
+  <pre class="code-badge-pre">
+  <code class="hljs">
+  &lt;<span class="hljs-dom">body</span>&gt;
+    &lt;<span class="hljs-dom">div </span><span class="hljs-attr">id</span>=<span class="hljs-string">"event-handling"</span>&gt;&lt;/<span class="hljs-dom">div</span>&gt;
+
+    &lt;<span class="hljs-dom">script</span>&gt;
+      <span class="hljs-dom">let </span><span class="hljs-attr">fixedSize</span> = <span class="hljs-dom">new </span><span class="hljs-type">PianoUI.Piano</span>(<span class="hljs-string">"#event-handling"</span>, {
+        <span class="hljs-attr">size: </span>[<span class="hljs-string">"800px"</span>, <span class="hljs-string">"200px"</span>]
+      });
+    &lt;/<span class="hljs-dom">script</span>&gt;
+  &lt;/<span class="hljs-dom">body</span>&gt;
+  </code></pre>
+
+  <!-- media query breakpoints -->
+  <!-- event handling - connect to Tone.js -->
+  <!-- flex sizing -->
+
+
+  <script>
+    let fixedSize = new PianoUI.Piano("#fixed-size", {
+      size: ['800px', '200px']
+    });
+
+    let responsiveSize = new PianoUI.Piano("#responsive-size", {
+      size: ['100%', '100%']
+    });
+
+    let eventHandler = new PianoUI.Piano("#event-handling", {
+      size: ['800px', '200px']
+    });
+
+    let synth = new Tone.Synth().toMaster();
+    let notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+
+    eventHandler.on('noteOn', (event) => {
+      let note = notes[event.note % 12];
+      note += Math.floor(event.note / 12);
+      synth.triggerAttack(note);
+    });
+
+    eventHandler.on('noteOff', (event) => {
+      synth.triggerRelease();
+    });
+  </script>
+
+</body>
+</html>
